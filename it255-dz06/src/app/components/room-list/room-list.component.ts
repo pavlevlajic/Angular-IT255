@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Room } from '../../models/room.model';
 import { RoomService } from '../../services/room.service';
 import { CommonModule } from '@angular/common';
@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './room-list.component.html',
   styleUrl: './room-list.component.css',
 })
-export class RoomListComponent {
+export class RoomListComponent implements OnInit {
   rooms: Room[] = [];
 
   constructor(private roomService: RoomService) {}

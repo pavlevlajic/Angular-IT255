@@ -1,0 +1,19 @@
+<div class="container mt-3">
+  <h2>Ponuda Apartmana</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Naziv Apartmana</th>
+        <th scope="col">Cena</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ponuda of ponude">
+        <td>{{ ponuda.id }}</td>
+        <td>{{ ponuda.nazivApartmana }}</td>
+        <td>{{ ponuda.cena }} €</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

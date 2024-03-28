@@ -11,9 +11,8 @@ import { RoomService } from '../../services/room.service';
   styleUrl: './room-add.component.css',
 })
 export class RoomAddComponent {
+  // private RoomService roomService = new RoomService();
   constructor(private roomService: RoomService) {}
-
-  ngOnInit(): void {}
 
   onAddRoom(form: NgForm) {
     const newRoom: Room = {
