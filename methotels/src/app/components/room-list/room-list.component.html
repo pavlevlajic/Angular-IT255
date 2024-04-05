@@ -5,12 +5,18 @@
       <tr>
         <th scope="col">ID</th>
         <th scope="col">Name</th>
+        <th scope="col">Options</th>
+        <th scope="col">Price of additional options</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let room of rooms">
         <td>{{ room.id }}</td>
         <td>{{ room.name }}</td>
+        <td>{{ room.options }}</td>
+        <!-- <td>{{ room.price === 0 ? "" : room.price }}</td> -->
+        <td *ngIf="room.price !== undefined && room.price > 0">{{ room.price }}</td>
+        <td *ngIf="room.price === 0"></td>
       </tr>
     </tbody>
   </table>
