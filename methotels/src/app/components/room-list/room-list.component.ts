@@ -17,5 +17,9 @@ export class RoomListComponent implements OnInit {
 
   ngOnInit(): void {
     this.rooms = this.roomService.getRooms();
+
+    // Testiranje racunanja ukupnog cene na osnovu broja noci
+    const ukupnaCena = this.roomService.getTotalPrice(5, 10);
+    console.log('Ukupna cena: ', ukupnaCena);
   }
 }

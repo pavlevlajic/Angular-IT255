@@ -16,4 +16,8 @@ export class RoomService {
   getRooms(): Room[] {
     return this.rooms;
   }
+
+  getTotalPrice(quantity: number, price: number) {
+    return quantity * price;
+  }
 }
