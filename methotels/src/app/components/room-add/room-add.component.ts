@@ -1,7 +1,14 @@
 import { Component } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
+import {
+  FormGroup,
+  FormControl,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms'; // Import FormGroup, FormControl, and Validators
 import { Room } from '../../models/room.model';
 import { RoomService } from '../../services/room.service';
+import { CommonModule } from '@angular/common';
 
 interface RoomOptions {
   klima: boolean;
@@ -18,9 +25,9 @@ interface RoomPrices {
 @Component({
   selector: 'app-room-add',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule, ReactiveFormsModule],
   templateUrl: './room-add.component.html',
-  styleUrl: './room-add.component.css',
+  styleUrls: ['./room-add.component.css'],
 })
 export class RoomAddComponent {
   options: RoomOptions = {
@@ -28,6 +35,16 @@ export class RoomAddComponent {
     miniBar: false,
     sauna: false,
   };
+
+  roomForm: FormGroup = new FormGroup({
+    id: new FormControl('', Validators.required),
+    name: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    roomOptions: new FormGroup({
+      klima: new FormControl(this.options.klima),
+      miniBar: new FormControl(this.options.miniBar),
+      sauna: new FormControl(this.options.sauna),
+    }),
+  }); // Define roomForm as a FormGroup
 
   prices: RoomPrices = {
     klima: 10,
@@ -37,30 +54,34 @@ export class RoomAddComponent {
 
   constructor(private roomService: RoomService) {}
 
-  onAddRoom(form: NgForm) {
-    const selectedOptions = Object.keys(this.options).filter(
-      (key) => this.options[key as keyof RoomOptions] === true
-    );
+  onAddRoom() {
+    if (this.roomForm.valid) {
+      console.log(this.roomForm.value);
 
-    let price = 0;
+      const selectedOptions = Object.keys(this.roomForm.value.roomOptions).filter(
+        (key) => this.roomForm.value.roomOptions[key as keyof RoomOptions] === true
+      );
 
-    Object.keys(this.prices).forEach(key => {
-      if (selectedOptions.includes(key)) {
-        price += this.prices[key as keyof RoomPrices];
-      }
-    })
+      let price = 0;
 
-    const newRoom: Room = {
-      id: form.value.id,
-      name: form.value.name,
-      options: selectedOptions,
-      price: price
-    };
+      Object.keys(this.prices).forEach((key) => {
+        if (selectedOptions.includes(key)) {
+          price += this.prices[key as keyof RoomPrices];
+        }
+      });
 
-    console.log(newRoom);
+      const newRoom: Room = {
+        id: this.roomForm.value.id,
+        name: this.roomForm.value.name,
+        options: selectedOptions,
+        price: price,
+      };
 
-    this.roomService.addRoom(newRoom);
+      console.log(newRoom);
 
-    form.reset();
+      this.roomService.addRoom(newRoom);
+
+      this.roomForm.reset();
+    }
   }
 }
