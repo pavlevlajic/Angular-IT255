@@ -2,19 +2,11 @@
   "rooms": [
     {
       "id": "1",
-      "name": "Room 10",
+      "name": "Room 1111",
       "options": [
-        "klima"
+        "sauna"
       ],
-      "price": 100
-    },
-    {
-      "id": "2",
-      "name": "Room 20",
-      "options": [
-        "miniBar"
-      ],
-      "price": 200
+      "price": 30
     },
     {
       "id": "3",
@@ -50,6 +42,33 @@
         "sauna"
       ],
       "price": 60
+    },
+    {
+      "id": "7",
+      "name": "Room 7",
+      "options": [
+        "klima",
+        "miniBar",
+        "sauna"
+      ],
+      "price": 60
+    },
+    {
+      "id": "8",
+      "name": "Room 8",
+      "options": [
+        "klima"
+      ],
+      "price": 10
+    },
+    {
+      "id": "123132",
+      "name": "assadaf",
+      "options": [
+        "klima",
+        "miniBar"
+      ],
+      "price": 30
     }
   ]
 }

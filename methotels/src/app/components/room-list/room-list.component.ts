@@ -1,18 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Room } from '../../models/room.model';
 import { RoomService } from '../../services/room.service';
 import { CommonModule } from '@angular/common';
-import { RoomAddComponent } from '../room-add/room-add.component';
+import { RoomAddComponent } from '../room-form/room-form.component';
 
 @Component({
   selector: 'app-room-list',
   standalone: true,
   imports: [CommonModule, RoomAddComponent],
   templateUrl: './room-list.component.html',
-  styleUrl: './room-list.component.css',
+  styleUrls: ['./room-list.component.css'],
 })
 export class RoomListComponent implements OnInit {
   rooms: Room[] = [];
+
+  @Output() roomToEdit = new EventEmitter<Room>();
 
   constructor(private roomService: RoomService) {}
 
@@ -20,13 +22,27 @@ export class RoomListComponent implements OnInit {
     this.roomService.getRooms().subscribe((rooms) => {
       this.rooms = rooms;
     });
+  }
 
-    // Testiranje racunanja ukupnog cene na osnovu broja noci
-    const ukupnaCena = this.roomService.getTotalPrice(5, 10);
-    console.log('Ukupna cena: ', ukupnaCena);
+  onEditRoom(room: Room) {
+    this.roomToEdit.emit(room);
+  }
+
+  // Call this method when a room is updated
+  updateRoomInList(updatedRoom: Room) {
+    const index = this.rooms.findIndex((room) => room.id === updatedRoom.id);
+    if (index !== -1) {
+      this.rooms[index] = updatedRoom;
+    }
   }
 
   onRoomAdded(addedRoom: Room) {
-    this.rooms.push(addedRoom);
+    this.rooms.push(addedRoom); // Add the new room to the local array
+  }
+
+  onDeleteRoom(id: string) {
+    this.roomService.deleteRoom(id).subscribe((room) => {
+      this.rooms = this.rooms.filter((x) => x.id !== room.id);
+    });
   }
 }

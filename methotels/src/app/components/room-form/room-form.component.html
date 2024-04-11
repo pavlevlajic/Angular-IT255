@@ -78,8 +78,17 @@
       </div>
     </div>
 
-    <button type="submit" class="btn btn-primary" [disabled]="!roomForm.valid">
-      Add Room
+    <button
+      type="submit"
+      class="btn"
+      [ngClass]="{ 'btn-primary': !room, 'btn-warning': room }"
+      [disabled]="!roomForm.valid"
+    >
+      {{ room ? "Update" : "Add" }} Room
+    </button>
+
+    <button type="button" class="btn btn-secondary" (click)="this.resetForm()">
+      Cancel
     </button>
   </form>
 </div>

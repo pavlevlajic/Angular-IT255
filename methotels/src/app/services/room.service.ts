@@ -21,8 +21,20 @@ export class RoomService {
     return this.http.post<Room>(`${this.apiUrl}/rooms`, room, httpOptions);
   }
 
+  updateRoom(room: Room): Observable<Room> {
+    return this.http.put<Room>(
+      `${this.apiUrl}/rooms/${room.id}`,
+      room,
+      httpOptions
+    );
+  }
+
   getRooms(): Observable<Room[]> {
     return this.http.get<Room[]>(`${this.apiUrl}/rooms`);
+  }
+
+  deleteRoom(id: string): Observable<Room> {
+    return this.http.delete<Room>(`${this.apiUrl}/rooms/${id}`);
   }
 
   getTotalPrice(quantity: number, price: number) {

@@ -1,11 +1,18 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import {
   FormGroup,
   FormControl,
   Validators,
   FormsModule,
   ReactiveFormsModule,
-} from '@angular/forms'; // Import FormGroup, FormControl, and Validators
+} from '@angular/forms';
 import { Room } from '../../models/room.model';
 import { RoomService } from '../../services/room.service';
 import { CommonModule } from '@angular/common';
@@ -23,17 +30,27 @@ interface RoomPrices {
 }
 
 @Component({
-  selector: 'app-room-add',
+  selector: 'app-room-form',
   standalone: true,
   imports: [FormsModule, CommonModule, ReactiveFormsModule],
-  templateUrl: './room-add.component.html',
-  styleUrls: ['./room-add.component.css'],
+  templateUrl: './room-form.component.html',
+  styleUrls: ['./room-form.component.css'],
 })
-export class RoomAddComponent {
+export class RoomAddComponent implements OnChanges {
+  @Input() room: Room | null = null;
+  @Output() roomAdded: EventEmitter<Room> = new EventEmitter<Room>();
+  @Output() roomUpdated: EventEmitter<Room> = new EventEmitter<Room>();
+
   options: RoomOptions = {
     klima: false,
     miniBar: false,
     sauna: false,
+  };
+
+  prices: RoomPrices = {
+    klima: 10,
+    miniBar: 20,
+    sauna: 30,
   };
 
   roomForm: FormGroup = new FormGroup({
@@ -44,22 +61,26 @@ export class RoomAddComponent {
       miniBar: new FormControl(this.options.miniBar),
       sauna: new FormControl(this.options.sauna),
     }),
-  }); // Define roomForm as a FormGroup
-
-  prices: RoomPrices = {
-    klima: 10,
-    miniBar: 20,
-    sauna: 30,
-  };
-
-  @Output() roomAdded: EventEmitter<Room> = new EventEmitter<Room>();
+  });
 
   constructor(private roomService: RoomService) {}
 
-  onAddRoom() {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['room'] && this.room) {
+      this.roomForm.patchValue({
+        id: this.room.id,
+        name: this.room.name,
+        roomOptions: {
+          klima: this.room.options?.includes('klima'),
+          miniBar: this.room.options?.includes('miniBar'),
+          sauna: this.room.options?.includes('sauna'),
+        },
+      });
+    }
+  }
+  
+  onAddRoom(): void {
     if (this.roomForm.valid) {
-      console.log(this.roomForm.value);
-
       const selectedOptions = Object.keys(
         this.roomForm.value.roomOptions
       ).filter(
@@ -68,7 +89,6 @@ export class RoomAddComponent {
       );
 
       let price = 0;
-
       Object.keys(this.prices).forEach((key) => {
         if (selectedOptions.includes(key)) {
           price += this.prices[key as keyof RoomPrices];
@@ -82,13 +102,24 @@ export class RoomAddComponent {
         price: price,
       };
 
-      console.log(newRoom);
-
-      this.roomService.addRoom(newRoom).subscribe((room) => {
-        this.roomAdded.emit(room);
-      });
-
-      this.roomForm.reset();
+      if (this.room) {
+        // Update room
+        this.roomService.updateRoom(newRoom).subscribe((updatedRoom) => {
+          this.roomUpdated.emit(updatedRoom);
+          this.resetForm();
+        });
+      } else {
+        // Add room
+        this.roomService.addRoom(newRoom).subscribe((addedRoom) => {
+          this.roomAdded.emit(addedRoom); // Emit the added room
+          this.resetForm();
+        });
+      }
     }
+  }
+
+  resetForm(): void {
+    this.roomForm.reset();
+    this.room = null; // Reset the selected room
   }
 }

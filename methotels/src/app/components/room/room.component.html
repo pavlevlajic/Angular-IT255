@@ -1,0 +1,9 @@
+<div class="container">
+  <app-room-form
+    [room]="selectedRoom"
+    (roomAdded)="onRoomAdded($event)"
+    (roomUpdated)="onRoomUpdated($event)"
+  ></app-room-form>
+
+  <app-room-list (roomToEdit)="onRoomToEdit($event)"></app-room-list>
+</div>

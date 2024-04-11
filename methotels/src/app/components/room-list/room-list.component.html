@@ -1,5 +1,3 @@
-<app-room-add (roomAdded)="onRoomAdded($event)"></app-room-add>
-
 <div class="container mt-3">
   <h2>Room List</h2>
   <table class="table">
@@ -21,6 +19,10 @@
           {{ room.price }}
         </td>
         <td *ngIf="room.price === 0"></td>
+        <td>
+          <button class="btn btn-warning" (click)="onEditRoom(room)">Edit</button>
+          <button class="btn btn-danger" (click)="onDeleteRoom(room.id)">Delete</button>
+        </td>
       </tr>
     </tbody>
   </table>
