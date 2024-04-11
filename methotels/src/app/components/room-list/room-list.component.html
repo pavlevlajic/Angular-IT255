@@ -1,3 +1,5 @@
+<app-room-add (roomAdded)="onRoomAdded($event)"></app-room-add>
+
 <div class="container mt-3">
   <h2>Room List</h2>
   <table class="table">
@@ -15,7 +17,9 @@
         <td>{{ room.name }}</td>
         <td>{{ room.options }}</td>
         <!-- <td>{{ room.price === 0 ? "" : room.price }}</td> -->
-        <td *ngIf="room.price !== undefined && room.price > 0">{{ room.price }}</td>
+        <td *ngIf="room.price !== undefined && room.price > 0">
+          {{ room.price }}
+        </td>
         <td *ngIf="room.price === 0"></td>
       </tr>
     </tbody>

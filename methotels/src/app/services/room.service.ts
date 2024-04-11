@@ -1,20 +1,28 @@
 import { Injectable } from '@angular/core';
 import { Room } from '../models/room.model';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+const httpOptions = {
+  headers: new HttpHeaders({
+    'Content-Type': 'application/json',
+  }),
+};
 
 @Injectable({
   providedIn: 'root',
 })
 export class RoomService {
-  rooms: Room[] = [];
+  private apiUrl = 'http://localhost:3000';
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
-  addRoom(room: Room) {
-    this.rooms.push(room);
+  addRoom(room: Room): Observable<Room> {
+    return this.http.post<Room>(`${this.apiUrl}/rooms`, room, httpOptions);
   }
 
-  getRooms(): Room[] {
-    return this.rooms;
+  getRooms(): Observable<Room[]> {
+    return this.http.get<Room[]>(`${this.apiUrl}/rooms`);
   }
 
   getTotalPrice(quantity: number, price: number) {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import {
   FormGroup,
   FormControl,
@@ -52,14 +52,19 @@ export class RoomAddComponent {
     sauna: 30,
   };
 
+  @Output() roomAdded: EventEmitter<Room> = new EventEmitter<Room>();
+
   constructor(private roomService: RoomService) {}
 
   onAddRoom() {
     if (this.roomForm.valid) {
       console.log(this.roomForm.value);
 
-      const selectedOptions = Object.keys(this.roomForm.value.roomOptions).filter(
-        (key) => this.roomForm.value.roomOptions[key as keyof RoomOptions] === true
+      const selectedOptions = Object.keys(
+        this.roomForm.value.roomOptions
+      ).filter(
+        (key) =>
+          this.roomForm.value.roomOptions[key as keyof RoomOptions] === true
       );
 
       let price = 0;
@@ -79,7 +84,9 @@ export class RoomAddComponent {
 
       console.log(newRoom);
 
-      this.roomService.addRoom(newRoom);
+      this.roomService.addRoom(newRoom).subscribe((room) => {
+        this.roomAdded.emit(room);
+      });
 
       this.roomForm.reset();
     }
