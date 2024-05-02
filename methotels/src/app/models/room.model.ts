@@ -1,3 +1,4 @@
+// Entitet predstavljen preko modela
 export interface Room {
   id: string;
   name: string;

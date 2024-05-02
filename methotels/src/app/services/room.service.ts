@@ -9,6 +9,7 @@ const httpOptions = {
   }),
 };
 
+// Servis sa pogledima (observables)
 @Injectable({
   providedIn: 'root',
 })
