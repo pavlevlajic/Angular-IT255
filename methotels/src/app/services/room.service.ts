@@ -14,7 +14,7 @@ const httpOptions = {
   providedIn: 'root',
 })
 export class RoomService {
-  private apiUrl = 'http://localhost:3000';
+  public apiUrl = 'http://localhost:3000';
 
   constructor(private http: HttpClient) {}
 
